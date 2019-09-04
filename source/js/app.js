@@ -11,20 +11,7 @@ class Book {
 // UI Class: Handle UI Tasks
 class UI {
 	static displayBooks () {
-		// const StoredBooks = [
-		// 	{
-		// 		title: 'Book One',
-		// 		author: 'John Doe',
-		// 		isbn: '34586'
-		// 	},
-		// 	{
-		// 		title: 'Book Two',
-		// 		author: 'Jone Doe',
-		// 		isbn: '34587'
-		// 	}
-		// ];
 
-		// const books = StoredBooks;
 		const books = Store.getBooks();
 
 		books.forEach( (book) => UI.addBookToList(book));
@@ -38,7 +25,7 @@ class UI {
 			<td>${book.title}</td>
             <td>${book.author}</td>
             <td>${book.isbn}</td>
-            <td><a class="btn btn-danger btn-sm delete" href="">X</a></td>
+            <td><a class="btn btn-danger btn-sm delete" href="#">X</a></td>
 		`;
 
 		list.appendChild(row);
@@ -52,7 +39,7 @@ class UI {
 
 	static showAlert( message, className ){
 		const div = document.createElement('div');
-		div.clssName = `alert ${className}`;
+		div.className = `alert alert-${className}`;
 		div.appendChild(document.createTextNode(message));
 		const container = document.querySelector('.container');
 		const form = document.querySelector('#book-form');
@@ -75,7 +62,7 @@ class Store {
 		if( localStorage.getItem('books') === null ){
 			books = [];
 		} else {
-			books = JSON.parser(localStorage.getItem('books'));
+			books = JSON.parse(localStorage.getItem('books'));
 		}
 
 		return books;
@@ -95,6 +82,8 @@ class Store {
 				books.splice(index, 1);
 			}
 		});
+
+		localStorage.setItem('books', JSON.stringify(books));
 	}
 }
 
@@ -127,7 +116,7 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
 		Store.addBook(book);
 
 		// Show success message
-		UI.shoAlert('Book Added', 'success');
+		UI.showAlert('Book Added', 'success');
 
 		//Clear fields
 		UI.clearFields();
@@ -142,5 +131,5 @@ document.querySelector('#book-list').addEventListener('click', (e) => {
 	//console.log(e.target);
 
 	// Show success message
-	UI.shoAlert('Book Removed', 'success');
+	UI.showAlert('Book Removed', 'success');
 });
